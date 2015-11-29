@@ -6,15 +6,12 @@
 #  Are modules used by other soft? If not, just switch to py 3.x ?
 
 # Conditional build:
-%bcond_with	doc		# don't build doc
 %bcond_without	tests	# do not perform "make test"
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
 %define 	module	pgactivity
-Summary:	-
-Summary(pl.UTF-8):	-
-# Name must match the python module/package name (as in 'import' statement)
+Summary:	A top like application for PostgreSQL server activity monitoring
 Name:		pg_activity
 Version:	1.3.0
 Release:	1
@@ -76,13 +73,7 @@ API documentation for %{module}.
 Dokumentacja API %{module}.
 
 %prep
-# %setup -q -n %{module}-%{version}
 %setup -q
-
-# setup copy of source in py3 dir
-set -- *
-install -d py3
-cp -a "$@" py3
 
 %build
 %if %{with python2}
@@ -108,6 +99,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python3}
 %py3_install
 %endif
+# %py_postclean
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -115,13 +107,11 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc README.md docs
+%doc README.md
+%attr(755,root,root) %{_bindir}/pg_activity
 %dir %{py_sitescriptdir}/%{module}
 %{py_sitescriptdir}//%{module}/*.py[co]
-%attr(755,root,root) %{_bindir}/pg_activity
-%if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/%{name}-%{version}-py*.egg-info
-%endif
 %endif
 
 %if %{with python3}

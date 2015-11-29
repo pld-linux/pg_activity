@@ -24,11 +24,7 @@ Source0:	https://github.com/julmon/pg_activity/archive/v%{version}.tar.gz
 # Source0-md5:	88096354973c38761f056d04e550f58b
 URL:		https://github.com/julmon/pg_activity
 BuildRequires:	rpm-pythonprov
-# remove BR: python-devel for 'noarch' packages.
-# if py_postclean is used
-BuildRequires:	rpmbuild(macros) >= 1.219
-# if py3* macros are used
-BuildRequires:	rpmbuild(macros) >= 1.612
+BuildRequires:	rpmbuild(macros) >= 1.710
 # when using /usr/bin/env or other in-place substitutions
 #BuildRequires:	sed >= 4.0
 # when python3 present
@@ -44,7 +40,6 @@ BuildRequires:	python3-psycopg2 >= 2.2.1
 BuildRequires:	python3-setuptools
 %endif
 # Below Rs only work for main package (python2)
-#Requires:		python-libs
 Requires:	python-modules
 Requires:	python-psutil
 Requires:	python-psycopg2
@@ -91,11 +86,11 @@ cp -a "$@" py3
 
 %build
 %if %{with python2}
-%{__python} setup.py build --build-base build-2 %{?with_tests:test} --with-man
+%py_build
 %endif
 
 %if %{with python3}
-%{__python3} setup.py build --build-base build-3 %{?with_tests:test} --with-man
+%py3_build
 %endif
 
 %if %{with doc}
@@ -106,25 +101,13 @@ rm -rf _build/html/_sources
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %if %{with python2}
-%{__python} setup.py \
-	build --build-base build-2 \
-	install --skip-build \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
-
+%py_install
 %py_postclean
 %endif
-
 %if %{with python3}
-%{__python3} setup.py \
-	build --build-base build-3 \
-	install --skip-build \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
+%py3_install
 %endif
-
 
 %clean
 rm -rf $RPM_BUILD_ROOT

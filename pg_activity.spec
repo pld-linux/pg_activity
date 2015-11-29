@@ -1,28 +1,27 @@
 # TODO:
-#  Fix FATAL: 'PSProcess' object has no attribute 'get_memory_percent'
 #  Move man dir to proper place ?
 
 # NOTE:
-#  Not sure if should be build as separte packages for py 3.x / 2.x  and binary package ?
-#  Are modules used by other soft? If not just switch to py 3.x when there is release available
+#  Not sure if should be build as separate packages for py 3.x / 2.x  with different binaries? Same conflicting binaries?
+#  Are modules used by other soft? If not, just switch to py 3.x ?
 
 # Conditional build:
 %bcond_with	doc		# don't build doc
 %bcond_without	tests	# do not perform "make test"
 %bcond_without	python2 # CPython 2.x module
-%bcond_with	python3 # CPython 3.x module
+%bcond_without	python3 # CPython 3.x module
 
 %define 	module	pgactivity
 Summary:	-
 Summary(pl.UTF-8):	-
 # Name must match the python module/package name (as in 'import' statement)
 Name:		pg_activity
-Version:	1.2.0
-Release:	0.1
+Version:	1.3.0
+Release:	1
 License:	distributable
 Group:		Libraries/Python
 Source0:	https://github.com/julmon/pg_activity/archive/v%{version}.tar.gz
-# Source0-md5:	1c75bdc026312b322e24fe6492ce6b5f
+# Source0-md5:	88096354973c38761f056d04e550f58b
 URL:		https://github.com/julmon/pg_activity
 BuildRequires:	rpm-pythonprov
 # remove BR: python-devel for 'noarch' packages.
@@ -47,6 +46,8 @@ BuildRequires:	python3-setuptools
 # Below Rs only work for main package (python2)
 #Requires:		python-libs
 Requires:	python-modules
+Requires:	python-psutil
+Requires:	python-psycopg2
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -61,6 +62,8 @@ Summary:	-
 Summary(pl.UTF-8):	-
 Group:		Libraries/Python
 Requires:	python3-modules
+Requires:	python3-psutil
+Requires:	python3-psycopg2
 
 %description -n python3-%{module}
 
@@ -143,7 +146,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc README.md docs
 %{py3_sitescriptdir}/%{module}
-%{py3_sitescriptdir}/%{module}-%{version}-py*.egg-info
+%{py3_sitescriptdir}/%{name}-%{version}-py*.egg-info
 %endif
 
 %if %{with doc}

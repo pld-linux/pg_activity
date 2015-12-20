@@ -10,11 +10,11 @@
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
-%define 	module	pgactivity
+%define		module	pgactivity
 Summary:	A top like application for PostgreSQL server activity monitoring
 Name:		pg_activity
 Version:	1.3.0
-Release:	2
+Release:	3
 License:	distributable
 Group:		Libraries/Python
 Source0:	https://github.com/julmon/pg_activity/archive/v%{version}.tar.gz
@@ -92,14 +92,15 @@ rm -rf _build/html/_sources
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%if %{with python2}
-%py_install
-%py_postclean
-%endif
 %if %{with python3}
 %py3_install
 %endif
-# %py_postclean
+
+%if %{with python2}
+rm -r $RPM_BUILD_ROOT%{_bindir}
+%py_install
+%py_postclean
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT

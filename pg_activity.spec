@@ -3,22 +3,23 @@
 
 # NOTE:
 #  Not sure if should be build as separate packages for py 3.x / 2.x  with different binaries? Same conflicting binaries?
-#  Are modules used by other soft? If not, just switch to py 3.x ?
+#  Are modules used by other soft? For now, just switch to py 3.x.
 
 # Conditional build:
 %bcond_without	tests	# do not perform "make test"
-%bcond_without	python2 # CPython 2.x module
+# NOTE: building both python2 and python3 results with broken "binaries"
+%bcond_with	python2 # CPython 2.x module  
 %bcond_without	python3 # CPython 3.x module
 
 %define 	module	pgactivity
 Summary:	A top like application for PostgreSQL server activity monitoring
 Name:		pg_activity
-Version:	1.3.0
+Version:	1.3.1
 Release:	1
 License:	distributable
 Group:		Libraries/Python
 Source0:	https://github.com/julmon/pg_activity/archive/v%{version}.tar.gz
-# Source0-md5:	88096354973c38761f056d04e550f58b
+# Source0-md5:	273eb398eee15a66ba532a576e9da7da
 URL:		https://github.com/julmon/pg_activity
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.710
@@ -118,6 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python3-%{module}
 %defattr(644,root,root,755)
 %doc README.md docs
+%attr(755,root,root) %{_bindir}/pg_activity
 %{py3_sitescriptdir}/%{module}
 %{py3_sitescriptdir}/%{name}-%{version}-py*.egg-info
 %endif

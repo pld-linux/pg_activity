@@ -15,7 +15,7 @@
 Summary:	A top like application for PostgreSQL server activity monitoring
 Name:		pg_activity
 Version:	1.3.1
-Release:	2
+Release:	3
 License:	distributable
 Group:		Libraries/Python
 Source0:	https://github.com/julmon/pg_activity/archive/v%{version}.tar.gz
